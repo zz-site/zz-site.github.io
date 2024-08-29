@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesseract.js</title>
+</head>
+<body>
+
+<input type="file" id="upload" accept="image/*" />
+<p id="output">test</p>
+
+<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+<script>
+    document.getElementById('upload').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // 使用 Tesseract.js 识别中文
+        Tesseract.recognize(
+            file,                // 图像文件
+            'chi_sim',           // 使用简体中文语言包
+            {
+                logger: m => console.log(m),  // 输出日志，查看识别过程
+            }
+        ).then(({ data: { text } }) => {
+            document.getElementById('output').textContent = text; // 显示识别文本
+        }).catch(error => {
+            console.error('识别失败:', error);
+            document.getElementById('output').textContent = '识别失败，请重试。';
+        });
+    });
+</script>
+
+</body>
+</html>
