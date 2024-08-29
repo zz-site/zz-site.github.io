@@ -4,33 +4,70 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesseract.js</title>
+    <title>中文测试</title>
+    <style>
+        .preview {
+            margin-top: 20px;
+            max-width: 300px;
+            max-height: 300px;
+            border: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-
-<input type="file" id="upload" accept="image/*" />
-<p id="output">test</p>
+<input type="file" id="fileInput" accept="image/*" />
+<img id="previewImage" class="preview" src="" alt="图片预览" style="display: none;">
+<p id="output"></p>
+<button onclick="copyText()">复制文本</button>
 
 <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 <script>
-    document.getElementById('upload').addEventListener('change', function (event) {
+    const fileInput = document.getElementById('fileInput');
+    const previewImage = document.getElementById('previewImage');
+
+    fileInput.addEventListener('change', function (event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        // ʹ�� Tesseract.js ʶ������
+		const reader = new FileReader();
+		// 加载文件并设置到 img 的 src 属性
+		reader.onload = function (e) {
+			previewImage.src = e.target.result; // 设置图片 src
+			previewImage.style.display = 'block'; // 显示图片
+		};
+		// 读取文件为 Data URL（base64 格式）
+		reader.readAsDataURL(file);
+
         Tesseract.recognize(
-            file,                // ͼ���ļ�
-            'chi_sim',           // ʹ�ü����������԰�
+            file,                // 图像文件
+            'chi_sim',           // 使用简体中文语言包
             {
-                logger: m => console.log(m),  // �����־���鿴ʶ�����
+                logger: m => {
+					console.log("aaa", m);
+					const msg = "正在处理" + m.status + ' ' + m.progress;
+					document.getElementById('output').textContent = msg;
+				}
             }
         ).then(({ data: { text } }) => {
-            document.getElementById('output').textContent = text; // ��ʾʶ���ı�
+            document.getElementById('output').textContent = text; // 显示识别文本
         }).catch(error => {
-            console.error('ʶ��ʧ��:', error);
-            document.getElementById('output').textContent = 'ʶ��ʧ�ܣ������ԡ�';
+            console.error('识别失败:', error);
+            document.getElementById('output').textContent = '识别失败，请重试。';
         });
     });
+    // 使用 Clipboard API 复制文本
+    function copyText() {
+        const text = document.getElementById('output').textContent; // 获取文本框中的内容
+		console.log(text);
+        navigator.clipboard.writeText(text)
+            .then(() => {
+				console.log("复制成功");
+                // alert('复制成功！'); // 复制成功时的提示
+            })
+            .catch(err => {
+                console.error('复制失败:', err); // 错误处理
+            });
+    }
 </script>
 
 </body>

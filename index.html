@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesseract.js ¼òÌåÖĞÎÄÊ¶±ğÊ¾Àı</title>
+    <title>Tesseract.js ç®€ä½“ä¸­æ–‡è¯†åˆ«ç¤ºä¾‹</title>
 </head>
 <body>
 
 <input type="file" id="upload" accept="image/*" />
-<p id="output">Ê¶±ğ½á¹û»áÏÔÊ¾ÔÚÕâÀï...</p>
+<p id="output">è¯†åˆ«ç»“æœä¼šæ˜¾ç¤ºåœ¨è¿™é‡Œ...</p>
 
 <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 <script>
@@ -17,18 +17,18 @@
         const file = event.target.files[0];
         if (!file) return;
 
-        // Ê¹ÓÃ Tesseract.js Ê¶±ğÖĞÎÄ
+        // ä½¿ç”¨ Tesseract.js è¯†åˆ«ä¸­æ–‡
         Tesseract.recognize(
-            file,                // Í¼ÏñÎÄ¼ş
-            'chi_sim',           // Ê¹ÓÃ¼òÌåÖĞÎÄÓïÑÔ°ü
+            file,                // å›¾åƒæ–‡ä»¶
+            'chi_sim',           // ä½¿ç”¨ç®€ä½“ä¸­æ–‡è¯­è¨€åŒ…
             {
-                logger: m => console.log(m),  // Êä³öÈÕÖ¾£¬²é¿´Ê¶±ğ¹ı³Ì
+                logger: m => console.log(m),  // è¾“å‡ºæ—¥å¿—ï¼ŒæŸ¥çœ‹è¯†åˆ«è¿‡ç¨‹
             }
         ).then(({ data: { text } }) => {
-            document.getElementById('output').textContent = text; // ÏÔÊ¾Ê¶±ğÎÄ±¾
+            document.getElementById('output').textContent = text; // æ˜¾ç¤ºè¯†åˆ«æ–‡æœ¬
         }).catch(error => {
-            console.error('Ê¶±ğÊ§°Ü:', error);
-            document.getElementById('output').textContent = 'Ê¶±ğÊ§°Ü£¬ÇëÖØÊÔ¡£';
+            console.error('è¯†åˆ«å¤±è´¥:', error);
+            document.getElementById('output').textContent = 'è¯†åˆ«å¤±è´¥ï¼Œè¯·é‡è¯•ã€‚';
         });
     });
 </script>
